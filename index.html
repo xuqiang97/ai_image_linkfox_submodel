@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>支持选择LinkFox子模型</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --panel: #ffffff;
+      --text: #1f2937;
+      --muted: #64748b;
+      --line: #e5e7eb;
+      --line2: #dbe3ee;
+      --blue: #2563eb;
+      --blue2: #1d4ed8;
+      --blue-bg: #eff6ff;
+      --nav: #0f172a;
+      --tag-bg: #dbeafe;
+      --shadow: 0 8px 22px rgba(15, 23, 42, 0.07);
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      line-height: 1.5;
+    }
+
+    a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: #ffffff;
+      border-right: 1px solid var(--line2);
+      overflow-y: auto;
+    }
+
+    .sidebar-title {
+      background: var(--nav);
+      color: #fff;
+      padding: 22px 20px;
+    }
+
+    .sidebar-title h1 {
+      font-size: 16px;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sidebar-title p {
+      margin: 6px 0 0;
+      color: #9fb0c9;
+      font-size: 12px;
+    }
+
+    .nav-group {
+      padding: 16px 0 8px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .nav-group-title {
+      padding: 0 20px 8px;
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .nav-link {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 20px;
+      color: #334155;
+      font-size: 14px;
+      border-left: 3px solid transparent;
+    }
+
+    .nav-link:hover {
+      background: #f8fafc;
+      text-decoration: none;
+      color: #1d4ed8;
+    }
+
+    .nav-num {
+      color: #94a3b8;
+      width: 20px;
+      font-size: 12px;
+    }
+
+    .content {
+      padding: 24px;
+      max-width: 1320px;
+      width: 100%;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #ffffff, #edf5ff);
+      border: 1px solid var(--line2);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 22px 24px;
+      margin-bottom: 22px;
+    }
+
+    .hero h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--line2);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+      overflow: hidden;
+      scroll-margin-top: 18px;
+    }
+
+    .section-head {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .section-head h3 {
+      margin: 0;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-head p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .section-body {
+      padding: 22px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 24px;
+      height: 24px;
+      padding: 0 8px;
+      border-radius: 7px;
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .pill-blue { background: #dbeafe; color: #1d4ed8; border-color: #bfdbfe; }
+    .pill-purple { background: #ede9fe; color: #6d28d9; border-color: #ddd6fe; }
+    .pill-green { background: #dcfce7; color: #15803d; border-color: #bbf7d0; }
+    .pill-orange { background: #ffedd5; color: #c2410c; border-color: #fed7aa; }
+    .pill-gray { background: #f1f5f9; color: #475569; border-color: #e2e8f0; }
+
+    .prototype-row {
+      display: grid;
+      grid-template-columns: 1fr 330px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .mock-drawer {
+      border: 1px solid var(--line2);
+      border-radius: 16px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .drawer-title {
+      padding: 14px 16px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .drawer-title strong {
+      font-size: 16px;
+    }
+
+    .field-only {
+      padding: 20px 22px;
+    }
+
+    .anchor-label {
+      margin-bottom: 10px;
+      color: #64748b;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .field-card {
+      border: 1px solid #bfdbfe;
+      border-radius: 14px;
+      background: #fbfdff;
+      padding: 16px;
+    }
+
+    .field-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+
+    .field-label {
+      font-size: 14px;
+      font-weight: 800;
+      color: #1e293b;
+    }
+
+    .field-link {
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .blue-tip {
+      background: #eef6ff;
+      border-left: 3px solid #3b82f6;
+      color: #1e40af;
+      border-radius: 4px;
+      padding: 8px 10px;
+      font-size: 13px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tip-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #3b82f6;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      flex: 0 0 auto;
+      line-height: 1;
+    }
+
+    .label-link {
+      color: #2563eb;
+      font-weight: 800;
+    }
+
+
+    .sub-help {
+      margin: -2px 0 10px;
+      color: #64748b;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .select-box,
+    .readonly-box {
+      min-height: 40px;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      background: #ffffff;
+      padding: 9px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #111827;
+      font-size: 14px;
+    }
+
+    .readonly-box {
+      background: #f8fafc;
+      justify-content: flex-start;
+      color: #334155;
+    }
+
+    .disabled-select {
+      background: #f8fafc;
+      color: #64748b;
+      cursor: not-allowed;
+      opacity: .92;
+    }
+
+    .chev {
+      color: #64748b;
+      padding-left: 10px;
+    }
+
+    .dropdown {
+      margin-top: 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 16px 30px rgba(15, 23, 42, 0.12);
+    }
+
+    .option {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 12px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .option:last-child { border-bottom: 0; }
+    .option.active { background: #eff6ff; }
+
+    .option-title {
+      font-size: 14px;
+      font-weight: 750;
+      color: #111827;
+    }
+
+    .option-desc {
+      margin-top: 2px;
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    .power {
+      padding: 3px 8px;
+      background: #dbeafe;
+      color: #1d4ed8;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .mock-anchor {
+      margin-top: 14px;
+      border: 1px dashed #bfdbfe;
+      border-radius: 12px;
+      background: #f8fbff;
+      padding: 13px;
+      color: #1d4ed8;
+      font-weight: 700;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .note-panel {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .note-panel h4 {
+      margin: 0 0 10px;
+      font-size: 15px;
+    }
+
+    .note-panel ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #475569;
+      font-size: 13px;
+    }
+
+    .note-panel li {
+      margin: 7px 0;
+    }
+
+    .l3-line {
+      background: #0f172a;
+      border-radius: 10px;
+      color: #fff;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+    }
+
+    .l3-title {
+      font-size: 15px;
+      font-weight: 800;
+      margin-right: 4px;
+    }
+
+    .l3-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .l3-caption {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #64748b;
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .rules-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .rule {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 14px;
+    }
+
+    .rule strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #0f172a;
+    }
+
+    .rule span {
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    @media (max-width: 1100px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar {
+        position: relative;
+        height: auto;
+      }
+      .prototype-row { grid-template-columns: 1fr; }
+      .rules-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-title">
+        <h1>✨ 支持选择LinkFox子模型</h1>
+        <p>局部交互说明</p>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-title">页面结构</div>
+        <a class="nav-link" href="#overview"><span class="nav-num">0</span><span>原型说明</span></a>
+        <a class="nav-link" href="#editable"><span class="nav-num">1</span><span>新增 / 编辑抽屉</span></a>
+        <a class="nav-link" href="#readonly"><span class="nav-num">2</span><span>查看抽屉</span></a>
+        <a class="nav-link" href="#l3"><span class="nav-num">3</span><span>L3 顶部 Tag</span></a>
+        <a class="nav-link" href="#rules"><span class="nav-num">4</span><span>关键规则</span></a>
+        <a class="nav-link" href="#refs"><span class="nav-num">5</span><span>参考文档</span></a>
+      </div>
+      </aside>
+
+    <main class="content">
+      <section id="overview" class="hero">
+        <h2>支持选择LinkFox子模型</h2>
+        <p>本原型用于展示抽屉中的“LinkFox子模型”字段，以及 L3 沉浸式大屏顶部 Tag。</p>
+      </section>
+
+      <section id="editable" class="section">
+        <div class="section-head">
+          <h3><span class="badge">1</span> 新增 / 编辑任务抽屉：LinkFox子模型下拉</h3>
+          <p>这里只展示新增字段本身。</p>
+        </div>
+        <div class="section-body">
+          <div class="prototype-row">
+            <div class="mock-drawer">
+              <div class="drawer-title">
+                <strong>新增 / 编辑任务抽屉 · 局部</strong>
+                <span class="pill pill-green">可编辑态</span>
+              </div>
+              <div class="field-only">
+                <div class="anchor-label">
+                  <span class="pill pill-gray">位置</span>
+                  <span>位于「模型与数量配置」区域上方紧邻展示</span>
+                </div>
+
+                <div class="field-card">
+                  <div class="field-top">
+                    <div class="field-label">LinkFox子模型（<a class="label-link" href="https://open.ziniao.com/docSupport?docId=176" target="_blank">查看官方算力说明</a>）：</div>
+                  </div>
+                  <div class="blue-tip"><span class="tip-icon">!</span><span><strong>多模型适配</strong>：该字段仅 LinkFox 使用；自研、阿里绘蛙忽略此字段。</span></div>
+                  <div class="sub-help">图片分辨率固定按 2K 生成，页面算力按 2K 单张算力展示。</div>
+                  <div class="select-box">
+                    <span>谷歌香蕉1Pro（40算力/张）</span>
+                    <span class="chev">▾</span>
+                  </div>
+
+                  <div class="dropdown">
+                    <div class="option active">
+                      <div>
+                        <div class="option-title">谷歌香蕉1Pro</div>
+                      </div>
+                      <span class="power">40 算力/张</span>
+                    </div>
+                    <div class="option">
+                      <div>
+                        <div class="option-title">谷歌香蕉2</div>
+                      </div>
+                      <span class="power">40 算力/张</span>
+                    </div>
+                    <div class="option">
+                      <div>
+                        <div class="option-title">GPT图片2低品质</div>
+                      </div>
+                      <span class="power">15 算力/张</span>
+                    </div>
+                    <div class="option">
+                      <div>
+                        <div class="option-title">GPT图片2中品质</div>
+                      </div>
+                      <span class="power">50 算力/张</span>
+                    </div>
+                    <div class="option">
+                      <div>
+                        <div class="option-title">GPT图片2高品质</div>
+                      </div>
+                      <span class="power">150 算力/张</span>
+                    </div>
+                    <div class="option">
+                      <div>
+                        <div class="option-title">LinkFox自研模型V1</div>
+                      </div>
+                      <span class="power">20 算力/张</span>
+                    </div>
+                    <div class="option">
+                      <div>
+                        <div class="option-title">万相2.7</div>
+                      </div>
+                      <span class="power">25 算力/张</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mock-anchor">下方紧邻：现有「模型与数量配置」区域</div>
+              </div>
+            </div>
+
+            <div class="note-panel">
+              <h4>交互重点</h4>
+              <ul>
+                <li>新增 / 编辑态展示下拉，可选择 7 个选项。</li>
+                <li>系统默认选中“谷歌香蕉1Pro”。</li>
+                <li>下拉选项展示单张算力，固定 2K 规则用灰字说明。</li>
+                <li>蓝色提示沿用现有多模型适配样式。</li>
+                <li>算力说明链接新标签页打开。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="readonly" class="section">
+        <div class="section-head">
+          <h3><span class="badge">2</span> 查看任务抽屉：LinkFox子模型只读展示</h3>
+          <p>用户通过“查看任务”按钮进入查看抽屉。</p>
+        </div>
+        <div class="section-body">
+          <div class="prototype-row">
+            <div class="mock-drawer">
+              <div class="drawer-title">
+                <strong>查看任务抽屉 · 局部</strong>
+                <span class="pill pill-gray">只读态</span>
+              </div>
+              <div class="field-only">
+                <div class="anchor-label">
+                  <span class="pill pill-gray">位置</span>
+                  <span>位于「模型与数量配置」区域上方紧邻展示</span>
+                </div>
+
+                <div class="field-card">
+                  <div class="field-top">
+                    <div class="field-label">LinkFox子模型（<a class="label-link" href="https://open.ziniao.com/docSupport?docId=176" target="_blank">查看官方算力说明</a>）：</div>
+                  </div>
+                  <div class="blue-tip"><span class="tip-icon">!</span><span><strong>多模型适配</strong>：该字段仅 LinkFox 使用；自研、阿里绘蛙忽略此字段。</span></div>
+                  <div class="sub-help">图片分辨率固定按 2K 生成，页面算力按 2K 单张算力展示。</div>
+                  <div class="select-box disabled-select"><span>GPT图片2中品质（50算力/张）</span><span class="chev">▾</span></div>
+                </div>
+
+                <div class="mock-anchor">下方紧邻：现有「模型与数量配置」区域（只读）</div>
+              </div>
+            </div>
+
+            <div class="note-panel">
+              <h4>只读重点</h4>
+              <ul>
+                <li>查看态复用下拉组件置灰展示不可点击。</li>
+                <li>展示任务实际保存的 LinkFox子模型。</li>
+                <li>复制重跑 / 批量复制重跑继承原任务配置。</li>
+                <li>不使用前端缓存值覆盖已有任务。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="l3" class="section">
+        <div class="section-head">
+          <h3><span class="badge">3</span> L3 沉浸式大屏：顶部模型 Tag</h3>
+          <p>LinkFox 图片展示“LinkFox + 子模型”两个 Tag；自研、阿里绘蛙仅展示一级模型 Tag。</p>
+        </div>
+        <div class="section-body">
+          <div class="l3-grid">
+            <div>
+              <div class="l3-caption">
+                <span>LinkFox 图片：谷歌香蕉1Pro</span>
+                <span>两个 Tag</span>
+              </div>
+              <div class="l3-line">
+                <span class="l3-title">场景图 #1 详情</span>
+                <span class="pill pill-blue">● LinkFox</span>
+                <span class="pill pill-blue">谷歌香蕉1Pro</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="l3-caption">
+                <span>LinkFox 图片：GPT图片2中品质</span>
+                <span>两个 Tag</span>
+              </div>
+              <div class="l3-line">
+                <span class="l3-title">卖点图 #2 详情</span>
+                <span class="pill pill-blue">● LinkFox</span>
+                <span class="pill pill-blue">GPT图片2中品质</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="l3-caption">
+                <span>自研图片</span>
+                <span>仅一级模型 Tag</span>
+              </div>
+              <div class="l3-line">
+                <span class="l3-title">特写图 #1 详情</span>
+                <span class="pill pill-green">● 自研</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="l3-caption">
+                <span>阿里绘蛙图片</span>
+                <span>仅一级模型 Tag</span>
+              </div>
+              <div class="l3-line">
+                <span class="l3-title">A+ 图 #1 详情</span>
+                <span class="pill pill-orange">● 阿里绘蛙</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="rules" class="section">
+        <div class="section-head">
+          <h3><span class="badge">4</span> 关键规则摘要</h3>
+          <p>用于研发快速确认边界，完整规则以 PRD 正文为准。</p>
+        </div>
+        <div class="section-body">
+          <div class="rules-grid">
+            <div class="rule">
+              <strong>模型层级</strong>
+              <span>LinkFox子模型属于 LinkFox 内部 provider，不是一级模型，不进入多模型矩阵列。</span>
+            </div>
+            <div class="rule">
+              <strong>传参规则</strong>
+              <span>页面只展示子模型名称和算力；接口传参细节以 PRD 正文为准。</span>
+            </div>
+            <div class="rule">
+              <strong>缓存规则</strong>
+              <span>前端缓存 optionCode，按用户 + 美工/运营隔离，已有任务以保存配置为准。</span>
+            </div>
+            <div class="rule">
+              <strong>展示范围</strong>
+              <span>任务抽屉与 L3 沉浸式大屏展示；任务列表和 L2 审核工作台本期不展示。</span>
+            </div>
+            <div class="rule">
+              <strong>数据要求</strong>
+              <span>任务配置、生成过程、图片结果、BI 同步链路记录实际使用的子模型。</span>
+            </div>
+            <div class="rule">
+              <strong>历史兼容</strong>
+              <span>历史 LinkFox 数据无字段时，按 provider=BANANA_PRO、quality=NULL、resolution=2K 处理。</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="refs" class="section">
+        <div class="section-head">
+          <h3><span class="badge">5</span> 参考文档</h3>
+          <p>用于研发和测试快速复制、打开 LinkFox 官方文档。</p>
+        </div>
+        <div class="section-body">
+          <div class="rules-grid">
+            <div class="rule">
+              <strong>LinkFox 生图接口</strong>
+              <span><a href="https://open.ziniao.com/docSupport?docId=259" target="_blank">https://open.ziniao.com/docSupport?docId=259</a></span>
+            </div>
+            <div class="rule">
+              <strong>LinkFox 算力说明</strong>
+              <span><a href="https://open.ziniao.com/docSupport?docId=176" target="_blank">https://open.ziniao.com/docSupport?docId=176</a></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</body>
+</html>
