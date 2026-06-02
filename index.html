@@ -477,6 +477,71 @@
       font-size: 13px;
     }
 
+
+    .mock-textarea {
+      margin-bottom: 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px;
+      background: #fff;
+    }
+
+    .textarea-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 8px;
+    }
+
+    .textarea-box {
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #fff;
+      min-height: 98px;
+      padding: 10px 12px;
+      color: #334155;
+      font-size: 13px;
+      white-space: pre-line;
+      line-height: 1.7;
+    }
+
+    .textarea-count {
+      text-align: right;
+      color: #94a3b8;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    .batch-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .btn {
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 9px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: default;
+    }
+
+    .btn-light {
+      background: #fff;
+      color: #334155;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      border-color: #2563eb;
+      color: #fff;
+      box-shadow: 0 8px 16px rgba(37, 99, 235, .22);
+    }
+
     @media (max-width: 1100px) {
       .layout { grid-template-columns: 1fr; }
       .sidebar {
@@ -501,16 +566,17 @@
         <a class="nav-link" href="#overview"><span class="nav-num">0</span><span>原型说明</span></a>
         <a class="nav-link" href="#editable"><span class="nav-num">1</span><span>新增 / 编辑抽屉</span></a>
         <a class="nav-link" href="#readonly"><span class="nav-num">2</span><span>查看抽屉</span></a>
-        <a class="nav-link" href="#l3"><span class="nav-num">3</span><span>L3 顶部 Tag</span></a>
-        <a class="nav-link" href="#rules"><span class="nav-num">4</span><span>关键规则</span></a>
-        <a class="nav-link" href="#refs"><span class="nav-num">5</span><span>参考文档</span></a>
+        <a class="nav-link" href="#batch"><span class="nav-num">3</span><span>批量导入弹窗</span></a>
+        <a class="nav-link" href="#l3"><span class="nav-num">4</span><span>L3 顶部 Tag</span></a>
+        <a class="nav-link" href="#rules"><span class="nav-num">5</span><span>关键规则</span></a>
+        <a class="nav-link" href="#refs"><span class="nav-num">6</span><span>参考文档</span></a>
       </div>
       </aside>
 
     <main class="content">
       <section id="overview" class="hero">
         <h2>支持选择LinkFox子模型</h2>
-        <p>本原型用于展示抽屉中的“LinkFox子模型”字段，以及 L3 沉浸式大屏顶部 Tag。</p>
+        <p>本原型用于展示任务抽屉、批量导入弹窗中的“LinkFox子模型”字段，以及 L3 沉浸式大屏顶部 Tag。</p>
       </section>
 
       <section id="editable" class="section">
@@ -597,7 +663,7 @@
               <ul>
                 <li>新增 / 编辑态展示下拉，可选择 7 个选项。</li>
                 <li>系统默认选中“谷歌香蕉1Pro”。</li>
-                <li>下拉选项展示单张算力，固定 2K 规则用灰字说明。</li>
+                <li>下拉选项展示单张算力，固定2K和算力参考规则用灰字说明。</li>
                 <li>蓝色提示沿用现有多模型适配样式。</li>
                 <li>算力说明链接新标签页打开。</li>
               </ul>
@@ -650,9 +716,63 @@
         </div>
       </section>
 
+
+      <section id="batch" class="section">
+        <div class="section-head">
+          <h3><span class="badge">3</span> 批量导入弹窗：LinkFox子模型下拉</h3>
+          <p>批量导入任务时，LinkFox子模型字段位于「模型与数量配置」区域上方紧邻展示，并统一应用于本次导入任务。</p>
+        </div>
+        <div class="section-body">
+          <div class="prototype-row">
+            <div class="mock-drawer">
+              <div class="drawer-title">
+                <strong>批量导入弹窗 · 局部</strong>
+                <span class="pill pill-blue">统一配置</span>
+              </div>
+              <div class="field-only">
+                <div class="anchor-label">
+                  <span class="pill pill-gray">位置</span>
+                  <span>位于「模型与数量配置」区域上方紧邻展示</span>
+                </div>
+
+                <div class="field-card">
+                  <div class="field-top">
+                    <div class="field-label">LinkFox子模型（<a class="label-link" href="https://open.ziniao.com/docSupport?docId=176" target="_blank">查看官方算力说明</a>）：</div>
+                  </div>
+                  <div class="blue-tip"><span class="tip-icon">!</span><span><strong>多模型适配</strong>：该字段仅 LinkFox 使用；自研、阿里绘蛙忽略此字段。</span></div>
+                  <div class="sub-help">图片分辨率固定按2K生成，算力按2K单张算力展示仅供参考，实际以官方最新说明为准</div>
+                  <div class="select-box">
+                    <span>谷歌香蕉1Pro（40算力/张）</span>
+                    <span class="chev">▾</span>
+                  </div>
+                </div>
+
+                <div class="mock-anchor">下方紧邻：现有「模型与数量配置」区域</div>
+
+                <div class="batch-footer">
+                  <button class="btn btn-light">取消</button>
+                  <button class="btn btn-primary">确认导入</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="note-panel">
+              <h4>批量导入重点</h4>
+              <ul>
+                <li>批量导入弹窗仅展示本次新增的“LinkFox子模型”字段，不绘制美工版/运营版输入区。</li>
+                <li>本次选择统一应用于本次导入创建的任务。</li>
+                <li>默认值优先取前端缓存；无缓存时默认谷歌香蕉1Pro。</li>
+                <li>导入成功且至少存在 1 个 LinkFox 计划生成张数 &gt; 0 的成功任务后，更新缓存。</li>
+                <li>批量导入全部失败，或 LinkFox 计划生成张数 = 0 时，不更新缓存。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="l3" class="section">
         <div class="section-head">
-          <h3><span class="badge">3</span> L3 沉浸式大屏：顶部模型 Tag</h3>
+          <h3><span class="badge">4</span> L3 沉浸式大屏：顶部模型 Tag</h3>
           <p>LinkFox 图片展示“LinkFox + 子模型”两个 Tag；自研、阿里绘蛙仅展示一级模型 Tag。</p>
         </div>
         <div class="section-body">
@@ -708,7 +828,7 @@
 
       <section id="rules" class="section">
         <div class="section-head">
-          <h3><span class="badge">4</span> 关键规则摘要</h3>
+          <h3><span class="badge">5</span> 关键规则摘要</h3>
           <p>用于研发快速确认边界，完整规则以 PRD 正文为准。</p>
         </div>
         <div class="section-body">
@@ -727,7 +847,7 @@
             </div>
             <div class="rule">
               <strong>展示范围</strong>
-              <span>任务抽屉与 L3 沉浸式大屏展示；任务列表和 L2 审核工作台本期不展示。</span>
+              <span>任务抽屉、批量导入弹窗与 L3 沉浸式大屏展示；任务列表和 L2 审核工作台本期不展示。</span>
             </div>
             <div class="rule">
               <strong>数据要求</strong>
@@ -742,7 +862,7 @@
       </section>
       <section id="refs" class="section">
         <div class="section-head">
-          <h3><span class="badge">5</span> 参考文档</h3>
+          <h3><span class="badge">6</span> 参考文档</h3>
           <p>用于研发和测试快速复制、打开 LinkFox 官方文档。</p>
         </div>
         <div class="section-body">
